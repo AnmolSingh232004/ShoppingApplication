@@ -4,7 +4,7 @@ import com.example.ShoppingApp.ShoppingClasses.Coupons;
 import com.example.ShoppingApp.ShoppingClasses.Orders;
 import com.example.ShoppingApp.ShoppingClasses.Product;
 import com.example.ShoppingApp.ShoppingClasses.User;
-import com.example.ShoppingApp.ShoppingRepostories.*;
+import com.example.ShoppingApp.ShoppingRepositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

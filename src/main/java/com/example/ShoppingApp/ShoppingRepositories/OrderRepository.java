@@ -1,4 +1,4 @@
-package com.example.ShoppingApp.ShoppingRepostories;
+package com.example.ShoppingApp.ShoppingRepositories;
 
 import com.example.ShoppingApp.ShoppingClasses.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;

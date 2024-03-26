@@ -1,8 +1,7 @@
-package com.example.ShoppingApp.ShoppingRepostories;
+package com.example.ShoppingApp.ShoppingRepositories;
 
 import com.example.ShoppingApp.ShoppingClasses.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
