@@ -2,9 +2,11 @@ package com.example.ShoppingApp.ShoppingClasses;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
-public class User {
+public class Users {
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -18,12 +20,14 @@ public class User {
     )
     private Long iD;
     private String name;
+    @OneToMany(mappedBy = "users_order") // One user can have many orders
+    private List<Orders> orders;
 
-    public User(String name) {
+    public Users(String name) {
         this.name = name;
     }
 
-    public User() {
+    public Users() {
 
     }
 

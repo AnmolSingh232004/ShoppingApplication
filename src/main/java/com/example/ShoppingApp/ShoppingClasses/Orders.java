@@ -20,9 +20,9 @@ public class Orders {
             generator = "orders_sequence"
     )
     private Long id;
-    @ManyToOne
-    private User user;
-    @OneToMany(mappedBy = "orders_id")
+    @ManyToOne // Each order must have a user associated with it
+    private Users users_order;
+    @OneToMany(mappedBy = "orders_id") // A user can have multiple orders
     private List<Product> products;
     private Double orderValue;
     private int orderQuantity;
@@ -34,8 +34,8 @@ public class Orders {
     public Orders() {
 
     }
-    public Orders(User user, List<Product> products, int orderQuantity, Double orderValue, String couponUsed) {
-        this.user = user;
+    public Orders(Users users, List<Product> products, int orderQuantity, Double orderValue, String couponUsed) {
+        this.users_order = users;
         this.products = products;
         this.orderQuantity = orderQuantity;
         this.orderValue = orderValue;
@@ -74,12 +74,12 @@ public class Orders {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUser() {
+        return users_order;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Users users_order) {
+        this.users_order = users_order;
     }
 
     public List<Product> getProducts() {

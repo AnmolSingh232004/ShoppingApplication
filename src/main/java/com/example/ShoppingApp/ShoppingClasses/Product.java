@@ -20,7 +20,7 @@ public class Product {
     private Double price;
     private int quantityAvailable;
 
-    @ManyToOne
+    @ManyToOne // Each product must have one user/buyer
     private Orders orders_id;
 
     public Product() {

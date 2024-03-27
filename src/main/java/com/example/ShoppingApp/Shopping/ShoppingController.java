@@ -39,10 +39,10 @@ public class ShoppingController {
     }
 
     @PostMapping(path = "{userId}/order")
-    public void placeOrder(@RequestParam(required = true) int quantity,
+    public Orders placeOrder(@RequestParam(required = true) int quantity,
                            @RequestParam(required = false) String coupon,
                            @PathVariable("userId") Long id) {
-       shoppingService.placeOrder(id, quantity, coupon);
+       return shoppingService.placeOrder(id, quantity, coupon);
     }
 
     @PostMapping(path = "/{userId}/{orderId}/pay")

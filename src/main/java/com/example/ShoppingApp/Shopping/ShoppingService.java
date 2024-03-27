@@ -3,8 +3,9 @@ package com.example.ShoppingApp.Shopping;
 import com.example.ShoppingApp.ShoppingClasses.Coupons;
 import com.example.ShoppingApp.ShoppingClasses.Orders;
 import com.example.ShoppingApp.ShoppingClasses.Product;
-import com.example.ShoppingApp.ShoppingClasses.User;
+import com.example.ShoppingApp.ShoppingClasses.Users;
 import com.example.ShoppingApp.ShoppingRepositories.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,23 +40,23 @@ public class ShoppingService {
         return couponRepository.findAll(); // get all available coupons
     }
 
-    public List<Orders> getOrdersList(Long iD) {
-        return orderRepository.findAll(); // finds all orders of a user
+
+    public List<Orders> getOrdersList(Long iD) { // gets order list for a particular user
+        return orderRepository.findByUserId(iD);
     }
 
-    public List<Orders> getParticularOrderList(Long userId, Long orderId) {
-        List<Orders> list = getOrdersList(userId); // A list of all orders of a user
-        List<Orders> finalList = new ArrayList<>();
-        for (int i=0; i<list.size(); i++) {
-            if (list.get(i).getId().equals(orderId))finalList.add(list.get(i));
-            // determines if a particular order of user has the order id we want we add it to our finalList
-        }
-        return finalList;
+    public List<Orders> getParticularOrderList(Long userId, Long orderId) { // gets order list for a particular user with a particular order id
+        if (orderRepository.findByUserIdAndOrderId(userId, orderId).isEmpty())
+            throw new IllegalArgumentException("OrderId : " + orderId + "\nDescription : Order not found");
+        return orderRepository.findByUserIdAndOrderId(userId, orderId);
     }
 
-    public void placeOrder(Long id, int quantity, String coupon) {
-        Optional<User> userOptional = userRepository.findById(id);
+    @Transactional
+    public Orders placeOrder(Long id, int quantity, String coupon) { // places order if inputs are correct and updates db accordingly
+        Optional<Users> userOptional = userRepository.findById(id);
         Optional<Coupons> optionalCoupons = couponRepository.findCouponByString(coupon);
+        if (userOptional.isEmpty())throw new IllegalArgumentException("user id is invalid"); // These two lines were added separately to find exact source of error
+        if (optionalCoupons.isEmpty())throw new IllegalArgumentException("coupon is invalid"); // Which turned out to be me using "OFF5" as coupon instead of OFF5
         if (userOptional.isPresent() && optionalCoupons.isPresent()) {
             Optional<Product> product = productRepository.findById(1L); // Since only 1 product exists as of now
             if (product.isPresent()) {
@@ -64,8 +65,12 @@ public class ShoppingService {
                     Double priceAfterDiscount = orderValue - (orderValue * optionalCoupons.get().getDiscount() / 100);
                     List<Product> list = new ArrayList<>();
                     list.add(product.get());
-                    Orders orders = new Orders(userOptional.get(), list, quantity, priceAfterDiscount, coupon);
+                    Orders orders = new Orders(userOptional.get(), list, quantity, priceAfterDiscount*quantity, coupon);
+                    orders.setStatus("Successful");
                     orderRepository.save(orders);
+                    product.get().setQuantityAvailable(product.get().getQuantityAvailable() - quantity); // subtracts quantity avaiable with ordered
+                    couponRepository.delete(couponRepository.findCouponByString(coupon).get());
+                    return orders;
                 } else {
                     throw new IllegalArgumentException("Not enough quantity available");
                 }
@@ -78,8 +83,8 @@ public class ShoppingService {
 
     }
 
-    public Orders payBill(Long userId, Long orderId, Double amount) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public Orders payBill(Long userId, Long orderId, Double amount) { // Simulates a real transaction with various expected/possible outputs
+        Optional<Users> userOptional = userRepository.findById(userId);
         Optional<Orders> optionalOrders = orderRepository.findById(orderId);
         if (userOptional.isPresent() && optionalOrders.isPresent()) { // order id and user id valid
             Random random = new Random();
