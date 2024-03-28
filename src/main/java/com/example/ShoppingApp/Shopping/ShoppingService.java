@@ -1,9 +1,6 @@
 package com.example.ShoppingApp.Shopping;
 
-import com.example.ShoppingApp.ShoppingClasses.Coupons;
-import com.example.ShoppingApp.ShoppingClasses.Orders;
-import com.example.ShoppingApp.ShoppingClasses.Product;
-import com.example.ShoppingApp.ShoppingClasses.Users;
+import com.example.ShoppingApp.ShoppingClasses.*;
 import com.example.ShoppingApp.ShoppingRepositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +67,8 @@ public class ShoppingService {
                     orderRepository.save(orders);
                     product.get().setQuantityAvailable(product.get().getQuantityAvailable() - quantity); // subtracts quantity avaiable with ordered
                     couponRepository.delete(couponRepository.findCouponByString(coupon).get());
+                    Transaction transaction = new Transaction(orders.getId());
+                    transactionRepository.save(transaction);
                     return orders;
                 } else {
                     throw new IllegalArgumentException("Not enough quantity available");

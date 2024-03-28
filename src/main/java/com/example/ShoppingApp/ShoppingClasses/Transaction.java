@@ -11,8 +11,8 @@ public class Transaction {
     @SequenceGenerator(
             name = "transaction_sequence",
             sequenceName = "transaction_sequence",
-            initialValue = 1000,
-            allocationSize = 1
+            initialValue = 6000,
+            allocationSize = 6
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -20,8 +20,12 @@ public class Transaction {
     )
     private Long iD;
     private LocalDate transactionDate;
+    private Long orderId;
 
     public Transaction() {
+    }
+    public Transaction(Long orderId) {
+        this.orderId = orderId;
     }
 
     public Long getiD() {
