@@ -12,6 +12,7 @@ Testing for the same is done and recorded in Microsoft Word
 DOWNLOAD LINK : https://docs.google.com/document/d/1zWR324kAbiWrjEo3lmKRjpqcqsAdMT0b/edit?usp=sharing&ouid=117259944129101235274&rtpof=true&sd=true
 
 To run the app using executable go to "target/ShoppingApp-0.0.1-SNAPSHOT" and double click on it
+https://drive.google.com/file/d/1HydG02ae55Ss9U7oc93zf8sM6ex2oBRS/view?usp=sharing Download Link
 
 This will run the app in background and you can browse to
 http://localhost:8080/api/v1/shopping/"Your request url"
